@@ -1,0 +1,12 @@
+# PlatformIO
+.pio/
+
+# Visual Studio
+.vs/
+Debug/
+Release/
+x86/
+x64/
+*.sln
+*.vcxproj*
+.vscode/
