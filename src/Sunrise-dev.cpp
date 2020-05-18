@@ -38,6 +38,37 @@ void delayUntil(unsigned long int time)
     while((long)(millis() - time) < 0L);
 }
 
+void switchMode(measurementmode_t mode)
+{
+    while(true)
+    {
+        measurementmode_t measurementMode;
+        if(!sunrise.GetMeasurementModeEE(measurementMode))
+        {
+            Serial.println("*** ERROR: Could not get measurement mode");
+            while(true);
+        }
+
+        if(measurementMode == mode)
+        {
+            break;
+        }
+
+        Serial.println("Attempting to switch measurement mode...");
+        if(!sunrise.SetMeasurementModeEE(mode))
+        {
+            Serial.println("*** ERROR: Could not set measurement mode");
+            while(true);
+        }
+
+        if(!sunrise.HardRestart())
+        {
+            Serial.println("*** ERROR: Failed to restart the device");
+            while(true);
+        }
+    }
+}
+
 void setup(void)
 {
     delay(2500UL);
@@ -54,6 +85,10 @@ void setup(void)
         Serial.println("Error: Could not initialize the device");
         while(true);
     }
+
+    sunrise.Awake();
+    switchMode(measurementmode_t::MM_SINGLE);
+    sunrise.Sleep();
 
     Serial.println("Done");
     Serial.println();
