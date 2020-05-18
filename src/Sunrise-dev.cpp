@@ -16,6 +16,7 @@
 #define OUTPUT_CSV
 
 Sunrise sunrise;
+const measurementmode_t measurementMode = measurementmode_t::MM_SINGLE;
 uint16_t hourCount = 0U;
 unsigned long int nextHour;
 unsigned long int nextMeasurement;
@@ -87,7 +88,7 @@ void setup(void)
     }
 
     sunrise.Awake();
-    switchMode(measurementmode_t::MM_SINGLE);
+    switchMode(measurementMode);
     sunrise.Sleep();
 
     Serial.println("Done");
