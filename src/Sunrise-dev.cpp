@@ -7,9 +7,9 @@
 #define PIN_EN                  2
 #define PIN_NRDY                3
 
-//#define MEASUREMENT_INTERVAL    (5UL * 1000UL)              // 5s
+#define MEASUREMENT_INTERVAL    (5UL * 1000UL)              // 5s
 //#define MEASUREMENT_INTERVAL    (60UL * 1000UL)             // 1m
-#define MEASUREMENT_INTERVAL    ((5UL * 60UL) * 1000UL)     // 5m
+//#define MEASUREMENT_INTERVAL    ((5UL * 60UL) * 1000UL)     // 5m
 
 #define MS_PER_H                ((60UL * 60UL) * 1000UL)    // 3600000
 
@@ -84,11 +84,41 @@ void setup(void)
         Serial.println("Error: Could not initialize the device");
         while(true);
     }
-
     sunrise.Awake();
-    switchMode(measurementMode);
-    sunrise.Sleep();
 
+    switchMode(measurementMode);
+
+    float bap = 1032.7f;
+    if(!sunrise.SetBarometricAirPressure(bap))
+    {
+        Serial.println("Error: Could not set barometric air pressure");
+        while(true);
+    }
+
+    float bap2 = 0.0f;
+    if(!sunrise.GetBarometricAirPressure(bap2))
+    {
+        Serial.println("Error: Could not get barometric air pressure");
+        while(true);
+    }
+    Serial.print("BAP: "); Serial.println(bap2);
+
+    int16_t rawBap = 10327; // 0x2857
+    if(!sunrise.SetBarometricAirPressureRaw(rawBap))
+    {
+        Serial.println("Error: Could not set raw barometric air pressure");
+        while(true);
+    }
+
+    int16_t rawBap2 = 0;
+    if(!sunrise.GetBarometricAirPressureRaw(rawBap2))
+    {
+        Serial.println("Error: Could not get raw barometric air pressure");
+        while(true);
+    }
+    Serial.print("BAP: "); Serial.println(rawBap2);
+
+    sunrise.Sleep();
     Serial.println("Done");
     Serial.println();
     Serial.flush();
