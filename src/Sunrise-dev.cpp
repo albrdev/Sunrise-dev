@@ -10,10 +10,8 @@
 //#define MEASUREMENT_INTERVAL    (5UL * 1000UL)              // 5s
 //#define MEASUREMENT_INTERVAL    (60UL * 1000UL)             // 1m
 #define MEASUREMENT_INTERVAL    ((5UL * 60UL) * 1000UL)     // 5m
-#define MS_PER_H                ((60UL * 60UL) * 1000UL)    // 3600000
 
-//#define OUTPUT_TEXT
-#define OUTPUT_CSV
+#define MS_PER_H                ((60UL * 60UL) * 1000UL)    // 3600000
 
 Sunrise sunrise;
 const measurementmode_t measurementMode = measurementmode_t::MM_SINGLE;
