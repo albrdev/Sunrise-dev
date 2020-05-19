@@ -39,6 +39,7 @@ void delayUntil(unsigned long int time)
 
 void switchMode(measurementmode_t mode)
 {
+    sunrise.Awake();
     while(true)
     {
         measurementmode_t measurementMode;
@@ -66,6 +67,8 @@ void switchMode(measurementmode_t mode)
             while(true);
         }
     }
+
+    sunrise.Sleep();
 }
 
 void setup(void)
@@ -84,41 +87,9 @@ void setup(void)
         Serial.println("Error: Could not initialize the device");
         while(true);
     }
-    sunrise.Awake();
 
     switchMode(measurementMode);
 
-    float bap = 1032.7f;
-    if(!sunrise.SetBarometricAirPressure(bap))
-    {
-        Serial.println("Error: Could not set barometric air pressure");
-        while(true);
-    }
-
-    float bap2 = 0.0f;
-    if(!sunrise.GetBarometricAirPressure(bap2))
-    {
-        Serial.println("Error: Could not get barometric air pressure");
-        while(true);
-    }
-    Serial.print("BAP: "); Serial.println(bap2);
-
-    int16_t rawBap = 10327; // 0x2857
-    if(!sunrise.SetBarometricAirPressureRaw(rawBap))
-    {
-        Serial.println("Error: Could not set raw barometric air pressure");
-        while(true);
-    }
-
-    int16_t rawBap2 = 0;
-    if(!sunrise.GetBarometricAirPressureRaw(rawBap2))
-    {
-        Serial.println("Error: Could not get raw barometric air pressure");
-        while(true);
-    }
-    Serial.print("BAP: "); Serial.println(rawBap2);
-
-    sunrise.Sleep();
     Serial.println("Done");
     Serial.println();
     Serial.flush();
