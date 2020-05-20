@@ -13,7 +13,8 @@
 
 #define MS_PER_H                ((60UL * 60UL) * 1000UL)    // 3600000
 
-Sunrise sunrise;
+uint8_t address = 0x69;
+Sunrise sunrise(address);
 const measurementmode_t measurementMode = measurementmode_t::MM_SINGLE;
 uint16_t hourCount = 0U;
 unsigned long int nextHour;
@@ -39,7 +40,6 @@ void delayUntil(unsigned long int time)
 
 void switchMode(measurementmode_t mode)
 {
-    sunrise.Awake();
     while(true)
     {
         measurementmode_t measurementMode;
@@ -67,8 +67,6 @@ void switchMode(measurementmode_t mode)
             while(true);
         }
     }
-
-    sunrise.Sleep();
 }
 
 void setup(void)
@@ -88,7 +86,17 @@ void setup(void)
         while(true);
     }
 
+    sunrise.Awake();
+
     switchMode(measurementMode);
+
+    /*if(!sunrise.ChangeAddress(0x69))
+    {
+        Serial.println("Error: Could not change the device address");
+        while(true);
+    }*/
+
+    sunrise.Sleep();
 
     Serial.println("Done");
     Serial.println();
