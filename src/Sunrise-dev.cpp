@@ -29,13 +29,28 @@ void nrdyISR(void)
 bool awaitISR(unsigned long int timeout = 2000UL)
 {
     timeout += millis();
-    while(!isReady && (long)(millis() - timeout) < 0L);
+    while(!isReady && (long)(millis() - timeout) < 0L)
+    {
+        yield();
+    }
+
     return isReady;
 }
 
 void delayUntil(unsigned long int time)
 {
-    while((long)(millis() - time) < 0L);
+    while((long)(millis() - time) < 0L)
+    {
+        yield();
+    }
+}
+
+void errorState(void)
+{
+    while(true)
+    {
+        yield();
+    }
 }
 
 void switchMode(measurementmode_t mode)
@@ -46,7 +61,7 @@ void switchMode(measurementmode_t mode)
         if(!sunrise.GetMeasurementModeEE(measurementMode))
         {
             Serial.println("*** ERROR: Could not get measurement mode");
-            while(true);
+            errorState();
         }
 
         if(measurementMode == mode)
@@ -58,13 +73,13 @@ void switchMode(measurementmode_t mode)
         if(!sunrise.SetMeasurementModeEE(mode))
         {
             Serial.println("*** ERROR: Could not set measurement mode");
-            while(true);
+            errorState();
         }
 
         if(!sunrise.HardRestart())
         {
             Serial.println("*** ERROR: Failed to restart the device");
-            while(true);
+            errorState();
         }
     }
 }
@@ -83,7 +98,7 @@ void setup(void)
     if(!sunrise.Begin(PIN_EN, true))
     {
         Serial.println("Error: Could not initialize the device");
-        while(true);
+        errorState();
     }
 
     sunrise.Awake();
@@ -93,7 +108,7 @@ void setup(void)
     /*if(!sunrise.ChangeAddress(0x69))
     {
         Serial.println("Error: Could not change the device address");
-        while(true);
+        errorState();
     }*/
 
     sunrise.Sleep();
@@ -178,19 +193,19 @@ void loop(void)
             else
             {
                 Serial.println("*** ERROR: Reading measurement");
-                //while(true);
+                //errorState();
             }
         }
         else
         {
             Serial.println("*** ERROR: ISR timeout");
-            //while(true);
+            //errorState();
         }
     }
     else
     {
         Serial.println("*** ERROR: Starting single measurement");
-        //while(true);
+        //errorState();
     }
     #ifdef OUTPUT_TEXT
     Serial.println();
